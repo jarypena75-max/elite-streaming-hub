@@ -1,0 +1,14 @@
+# DB (por defecto SQLite)
+DATABASE_URL='postgresql://neondb_owner:npg_ToiS4If9kOsj@ep-nameless-dew-af1bv5f4-pooler.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
+
+
+# NextAuth
+NEXTAUTH_SECRET="d201407aedc02fdddc45ccde3233dd2a9c91d62e00dec40b27da6ef9c6ae24fd"
+NEXTAUTH_URL="http://localhost:3001"
+
+# Admin demo (se usa solo en seed)
+ADMIN_EMAIL="admin@demo.com"
+ADMIN_PASSWORD="admin123"
+
+# WhatsApp (sin +, sin espacios). Ej: 5213344614845
+NEXT_PUBLIC_WHATSAPP_NUMBER="5213344614845"
