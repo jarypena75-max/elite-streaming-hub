@@ -5,7 +5,13 @@ import type { Product } from "@/lib/zod";
 import { Filters, type FiltersState } from "@/components/Filters";
 import { ProductCard } from "@/components/ProductCard";
 
-export default function CatalogClient({ initialProducts, categories }: { initialProducts: Product[]; categories: string[] }) {
+export default function CatalogClient({
+  initialProducts,
+  categories,
+}: {
+  initialProducts: Product[];
+  categories: string[];
+}) {
   const [state, setState] = useState<FiltersState>({
     q: "",
     group: "ALL",
@@ -39,16 +45,40 @@ export default function CatalogClient({ initialProducts, categories }: { initial
 
   return (
     <div className="space-y-4">
-      <Filters state={state} categories={categories} onChange={setState} />
-      <div className="text-sm text-zinc-600">
-        Mostrando <span className="font-semibold">{filtered.length}</span> producto(s)
+      {/* Contenedor oscuro para filtros */}
+      <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-4 shadow-sm backdrop-blur">
+        <Filters state={state} categories={categories} onChange={setState} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {filtered.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
+      <div className="flex items-center justify-between text-sm text-zinc-300">
+        <div>
+          Mostrando <span className="font-semibold text-white">{filtered.length}</span> producto(s)
+        </div>
+
+        {state.q?.trim() ? (
+          <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-200">
+            Búsqueda: <span className="text-white">{state.q}</span>
+          </div>
+        ) : null}
       </div>
+
+      {filtered.length === 0 ? (
+        <div className="rounded-3xl border border-white/10 bg-zinc-950 p-10 text-center shadow-sm">
+          <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 text-xl">
+            🔎
+          </div>
+          <h3 className="mt-4 text-lg font-black text-white">Sin resultados</h3>
+          <p className="mt-2 text-sm text-zinc-300">
+            Prueba cambiando filtros o escribiendo otra palabra.
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
