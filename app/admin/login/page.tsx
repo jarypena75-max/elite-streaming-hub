@@ -2,12 +2,13 @@
 
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Button } from "@/components/ui";
 
-export default function AdminLogin() {
+function AdminLoginInner() {
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") ?? "/admin";
+
   const [email, setEmail] = useState("admin@demo.com");
   const [password, setPassword] = useState("admin123");
   const [error, setError] = useState<string | null>(null);
@@ -62,5 +63,13 @@ export default function AdminLogin() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function AdminLogin() {
+  return (
+    <Suspense fallback={null}>
+      <AdminLoginInner />
+    </Suspense>
   );
 }
