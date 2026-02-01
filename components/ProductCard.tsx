@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import type { Product } from "@/lib/zod";
 import { Badge, Button } from "@/components/ui";
 
@@ -10,11 +9,10 @@ function statusBadge(status: Product["status"]) {
 }
 
 export function ProductCard({ product }: { product: Product }) {
-  // ✅ CAMBIA ESTE NÚMERO POR TU WHATSAPP (solo números)
-  // México ejemplo: 521 + tu número (sin +, sin espacios)
-  const phone = "5215512345678";
+  // ✅ Tu WhatsApp (solo números)
+  const phone = "523344614845";
 
-  // Mensaje listo con info del producto
+  // Mensaje prellenado con info del producto
   const msg = `Hola, quiero comprar ${product.brand} - ${product.plan} (${product.durationMonths} mes(es)). Precio: $${product.priceMXN} MXN.`;
 
   // Link correcto de WhatsApp
@@ -51,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
             Ver
           </Button>
 
-          {/* ✅ Botón Comprar que abre WhatsApp */}
+          {/* ✅ Comprar abre WhatsApp */}
           <a
             href={wa}
             target="_blank"
