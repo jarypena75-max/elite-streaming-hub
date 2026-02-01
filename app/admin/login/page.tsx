@@ -9,8 +9,10 @@ function LoginInner() {
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") ?? "/admin";
 
-  const [email, setEmail] = useState("admin@demo.com");
-  const [password, setPassword] = useState("admin123");
+  // ✅ Ya NO hay credenciales por defecto
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +30,7 @@ function LoginInner() {
 
     setLoading(false);
 
-    if (res?.error) setError("Credenciales inválidas");
+    if (res?.error) return setError("Credenciales inválidas");
     if (res?.ok) window.location.href = callbackUrl;
   }
 
@@ -48,6 +50,7 @@ function LoginInner() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
+              autoComplete="email"
               required
             />
           </div>
@@ -59,6 +62,7 @@ function LoginInner() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="password"
+              autoComplete="current-password"
               required
             />
           </div>
