@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
 import { Button } from "@/components/ui";
 
-function AdminLoginInner() {
+function LoginInner() {
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") ?? "/admin";
 
@@ -19,7 +19,13 @@ function AdminLoginInner() {
     setLoading(true);
     setError(null);
 
-    const res = await signIn("credentials", { email, password, redirect: false, callbackUrl });
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl,
+    });
+
     setLoading(false);
 
     if (res?.error) setError("Credenciales inválidas");
@@ -30,7 +36,9 @@ function AdminLoginInner() {
     <div className="mx-auto max-w-md">
       <div className="rounded-3xl border border-zinc-200 bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-black tracking-tight">Admin</h1>
-        <p className="mt-2 text-sm text-zinc-600">Inicia sesión para administrar el catálogo.</p>
+        <p className="mt-2 text-sm text-zinc-600">
+          Inicia sesión para administrar el catálogo.
+        </p>
 
         <form onSubmit={onSubmit} className="mt-6 space-y-3">
           <div>
@@ -55,7 +63,11 @@ function AdminLoginInner() {
             />
           </div>
 
-          {error && <div className="rounded-xl bg-rose-50 p-3 text-sm font-semibold text-rose-700">{error}</div>}
+          {error && (
+            <div className="rounded-xl bg-rose-50 p-3 text-sm font-semibold text-rose-700">
+              {error}
+            </div>
+          )}
 
           <Button type="submit" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
@@ -66,10 +78,10 @@ function AdminLoginInner() {
   );
 }
 
-export default function AdminLogin() {
+export default function Page() {
   return (
     <Suspense fallback={null}>
-      <AdminLoginInner />
+      <LoginInner />
     </Suspense>
   );
 }
