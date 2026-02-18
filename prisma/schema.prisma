@@ -88,3 +88,10 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+model SiteSetting {
+  id                 String   @id @default("main")
+  catalogHeroImageUrl String?
+  catalogHeroTitle    String   @default("Catálogo")
+  catalogHeroSubtitle String   @default("Elige, revisa disponibilidad y pide por WhatsApp.")
+  updatedAt          DateTime @updatedAt
+}

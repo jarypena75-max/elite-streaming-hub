@@ -32,43 +32,48 @@ export default function CatalogClient({
         const hay = `${p.brand} ${p.plan} ${p.category} ${p.group}`.toLowerCase();
         if (!hay.includes(q)) return false;
       }
-
       return true;
     });
 
     if (state.sort === "PRICE_ASC") items = items.sort((a, b) => a.priceMXN - b.priceMXN);
     if (state.sort === "PRICE_DESC") items = items.sort((a, b) => b.priceMXN - a.priceMXN);
-    // NEW ya viene del server por createdAt
 
     return items;
   }, [initialProducts, state]);
 
   return (
-    <div className="space-y-4">
-      {/* Contenedor oscuro para filtros */}
-      <div className="rounded-3xl border border-white/10 bg-zinc-950/70 p-4 shadow-sm backdrop-blur">
+    <div className="space-y-5">
+      {/* Filtros estilo premium */}
+      <div className="rounded-3xl border border-zinc-200 bg-white/85 backdrop-blur p-4 shadow-sm">
         <Filters state={state} categories={categories} onChange={setState} />
       </div>
 
-      <div className="flex items-center justify-between text-sm text-zinc-300">
-        <div>
-          Mostrando <span className="font-semibold text-white">{filtered.length}</span> producto(s)
-        </div>
+      {/* Barra de info */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-sm text-zinc-600">
+        <span>
+          Mostrando <b className="text-zinc-900">{filtered.length}</b> resultado(s)
+        </span>
 
-        {state.q?.trim() ? (
-          <div className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-200">
-            Búsqueda: <span className="text-white">{state.q}</span>
-          </div>
-        ) : null}
+        <div className="flex flex-wrap gap-2">
+          {state.q.trim() ? (
+            <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold">
+              🔎 {state.q}
+            </span>
+          ) : null}
+          <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold">
+            ⭐ Premium
+          </span>
+        </div>
       </div>
 
+      {/* Resultados */}
       {filtered.length === 0 ? (
-        <div className="rounded-3xl border border-white/10 bg-zinc-950 p-10 text-center shadow-sm">
-          <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 text-xl">
+        <div className="rounded-3xl border border-zinc-200 bg-white p-10 text-center shadow-sm">
+          <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-zinc-100 text-xl">
             🔎
           </div>
-          <h3 className="mt-4 text-lg font-black text-white">Sin resultados</h3>
-          <p className="mt-2 text-sm text-zinc-300">
+          <h3 className="mt-4 text-lg font-black text-zinc-900">Sin resultados</h3>
+          <p className="mt-2 text-sm text-zinc-600">
             Prueba cambiando filtros o escribiendo otra palabra.
           </p>
         </div>
