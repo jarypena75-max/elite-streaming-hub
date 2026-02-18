@@ -1,18 +1,24 @@
-import { clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 
-export function cn(...classes: Array<string | undefined | null | false>) {
-  return clsx(classes);
+export function cn(...inputs: ClassValue[]) {
+  return clsx(inputs);
 }
 
 export function Badge({ children, variant }: { children: React.ReactNode; variant: "ok" | "warn" | "neutral" }) {
-  const klass =
-    variant === "ok"
-      ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
-      : variant === "warn"
-      ? "bg-rose-50 text-rose-700 ring-1 ring-rose-200"
-      : "bg-zinc-100 text-zinc-700 ring-1 ring-zinc-200";
+  const styles = {
+    ok: "bg-emerald-50 text-emerald-600 border-emerald-100",
+    warn: "bg-rose-50 text-rose-500 border-rose-100",
+    neutral: "bg-zinc-100 text-zinc-500 border-zinc-200",
+  };
 
-  return <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold", klass)}>{children}</span>;
+  return (
+    <span className={cn(
+      "inline-flex items-center rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-wider", 
+      styles[variant]
+    )}>
+      {children}
+    </span>
+  );
 }
 
 export function Button({
@@ -21,36 +27,18 @@ export function Button({
   href,
   disabled,
   variant = "primary",
-  type = "button",
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  href?: string;
-  disabled?: boolean;
-  variant?: "primary" | "ghost" | "danger";
-  type?: "button" | "submit";
-}) {
-  const base =
-    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-offset-2";
-  const styles =
-    variant === "primary"
-      ? "bg-zinc-900 text-white ring-zinc-900 hover:bg-zinc-800 focus:ring-zinc-900"
-      : variant === "danger"
-      ? "bg-rose-600 text-white ring-rose-600 hover:bg-rose-500 focus:ring-rose-600"
-      : "bg-transparent text-zinc-900 ring-zinc-200 hover:bg-zinc-50 focus:ring-zinc-400";
+  className,
+}: any) {
+  const base = "inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-extrabold transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
+  
+  const styles = {
+    primary: "bg-zinc-900 text-white hover:bg-zinc-800 shadow-xl shadow-zinc-200/50",
+    ghost: "bg-zinc-50 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900",
+    success: "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-100",
+  };
 
-  const klass = cn(base, styles, disabled && "opacity-50 cursor-not-allowed");
+  const klass = cn(base, styles[variant as keyof typeof styles], className);
 
-  if (href) {
-    return (
-      <a className={klass} href={href}>
-        {children}
-      </a>
-    );
-  }
-  return (
-    <button className={klass} onClick={onClick} disabled={disabled} type={type}>
-      {children}
-    </button>
-  );
+  if (href) return <a className={klass} href={href}>{children}</a>;
+  return <button className={klass} onClick={onClick} disabled={disabled}>{children}</button>;
 }

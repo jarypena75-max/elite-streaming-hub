@@ -1,83 +1,87 @@
 "use client";
 
 import type { Product } from "@/lib/zod";
-import { Badge, Button } from "@/components/ui";
-
-function statusBadge(status: Product["status"]) {
-  if (status === "DISPONIBLE") return <Badge variant="ok">✅ Disponible</Badge>;
-  return <Badge variant="warn">⚠️ Agotado</Badge>;
-}
+import { Badge, Button, cn } from "@/components/ui";
 
 export function ProductCard({ product }: { product: Product }) {
-  const phone = "523344614845"; // solo números
-
-  const msg = `Hola, quiero comprar ${product.brand} - ${product.plan} (${product.durationMonths} mes(es)). Precio: $${product.priceMXN} MXN.`;
+  const phone = "523344614845";
+  const msg = `Hola, me interesa el ${product.group === 'PERFILES' ? 'Perfil' : 'Cuenta Completa'} de ${product.brand} (${product.plan}).`;
   const wa = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-
-  const disabled = product.status !== "DISPONIBLE";
+  const isAvailable = product.status === "DISPONIBLE";
 
   return (
-    <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/30 p-6 shadow-lg transition hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_25px_70px_-45px_rgba(0,0,0,0.8)] m-4">
-      {/* Glow premium al hover */}
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
-        <div className="absolute -top-20 left-1/2 h-60 w-[30rem] -translate-x-1/2 rounded-full bg-fuchsia-500/15 blur-3xl" />
-        <div className="absolute -bottom-24 right-[-6rem] h-60 w-60 rounded-full bg-cyan-500/15 blur-3xl" />
+    <div className="group relative flex flex-col rounded-[32px] border border-zinc-100 bg-white p-4 shadow-sm transition-all hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] hover:-translate-y-2">
+      {/* Estatus y Categoría */}
+      <div className="flex items-center justify-between px-2 pt-2">
+        <Badge variant={isAvailable ? "ok" : "warn"}>
+          {isAvailable ? "En Stock" : "Agotado"}
+        </Badge>
+        <span className="text-[10px] font-black text-zinc-300 uppercase tracking-[0.2em]">
+          {product.category}
+        </span>
       </div>
 
-      <div className="relative flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="truncate rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-200">
-              {product.category}
-            </span>
-            <span className="truncate rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-200">
-              {product.group}
-            </span>
+      <div className="flex-1 p-6">
+        {/* Selector de Tipo (Visualizador de Grupo) */}
+        <div className="mb-4 inline-flex rounded-xl bg-zinc-50 p-1">
+          <div className={cn(
+            "rounded-lg px-3 py-1 text-[10px] font-bold uppercase tracking-tight transition-all",
+            product.group === "PERFILES" ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-400"
+          )}>
+            Perfil
           </div>
+          <div className={cn(
+            "rounded-lg px-3 py-1 text-[10px] font-bold uppercase tracking-tight transition-all",
+            product.group === "CUENTAS_COMPLETAS" ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-400"
+          )}>
+            Cuentas
+          </div>
+        </div>
 
-          <h3 className="mt-3 truncate text-xl font-black tracking-tight text-white">
+        <div className="space-y-1">
+          <p className="text-[11px] font-bold text-emerald-500 uppercase tracking-widest">Streaming Premium</p>
+          <h3 className="text-3xl font-black tracking-tighter text-zinc-900 leading-tight">
             {product.brand}
           </h3>
-
-          <p className="mt-1 truncate text-sm text-zinc-300">
+          <p className="text-sm font-medium text-zinc-400 italic">
             {product.plan} • {product.durationMonths} mes(es)
           </p>
         </div>
 
-        <div className="shrink-0">{statusBadge(product.status)}</div>
-      </div>
-
-      <div className="relative mt-5 flex items-end justify-between gap-3">
-        <div>
-          <div className="text-xs font-bold text-zinc-200">Precio</div>
-
-          <div className="mt-1 flex items-baseline gap-2">
-            <div className="text-4xl font-black tracking-tight text-white drop-shadow-[0_6px_20px_rgba(255,255,255,0.35)]">
-              ${product.priceMXN}
-            </div>
-            <div className="text-sm font-bold text-zinc-200">MXN</div>
+        <div className="mt-8">
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-sm font-bold text-zinc-400">$</span>
+            <span className="text-5xl font-black tracking-tighter text-zinc-900">
+              {product.priceMXN}
+            </span>
+            <span className="text-xs font-bold text-zinc-400 ml-1 uppercase">mxn</span>
           </div>
         </div>
+      </div>
 
-        <div className="flex gap-2">
-          <Button href={`/product/${product.id}`} variant="ghost">
-            Ver
-          </Button>
-
-          <a
-            href={wa}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={[
-              "inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-extrabold text-white shadow-sm transition",
-              disabled
-                ? "pointer-events-none opacity-50 bg-emerald-500/40"
-                : "bg-emerald-500/90 hover:bg-emerald-500 hover:shadow-[0_18px_60px_-25px_rgba(16,185,129,0.8)]",
-            ].join(" ")}
+      {/* Acciones principales */}
+      <div className="space-y-2 mt-4">
+        {isAvailable ? (
+          <Button 
+            href={wa} 
+            variant="success" 
+            className="w-full rounded-2xl py-4 shadow-emerald-200/50"
           >
-            Comprar
-          </a>
-        </div>
+            <span className="mr-2">⚡</span> Comprar Ahora
+          </Button>
+        ) : (
+          <div className="w-full py-4 text-center rounded-2xl bg-zinc-50 text-zinc-400 text-sm font-bold border border-dashed border-zinc-200">
+            Producto Agotado
+          </div>
+        )}
+        
+        <Button 
+          href={`/product/${product.id}`} 
+          variant="ghost" 
+          className="w-full rounded-2xl py-4 text-zinc-400 hover:text-zinc-900 transition-colors"
+        >
+          Ver todos los detalles
+        </Button>
       </div>
     </div>
   );
