@@ -21,7 +21,7 @@ export function Filters({ state, categories, onChange }: {
     <div className="rounded-3xl border border-zinc-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-10">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 className="text-sm font-bold text-zinc-900 uppercase tracking-wide">Filtros</h2>
+          <h2 className="text-sm font-bold text-zinc-780 uppercase tracking-wide">Filtros</h2>
           <p className="text-xs text-zinc-500 mt-1 font-medium">Personaliza tu búsqueda.</p>
         </div>
 
