@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
+// Función para manejar IDs numéricos o strings (CUID)
 function parseId(raw: string) {
   return /^\d+$/.test(raw) ? Number(raw) : raw;
 }
 
 export default async function ProductDetail({ params }: { params: { id?: string } }) {
+  // En Next.js 15+ params puede ser una promesa, si te sigue dando error usa:
+  // const { id: rawId } = await params;
   const raw = params?.id;
   if (!raw) return notFound();
 
@@ -18,31 +21,69 @@ export default async function ProductDetail({ params }: { params: { id?: string 
   if (!product) return notFound();
 
   return (
-    <main className="mx-auto max-w-4xl p-6">
-      <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-black">{product.brand}</h1>
-        <p className="mt-2 text-zinc-600">{product.category}</p>
+    <main className="mx-auto max-w-4xl p-6 min-h-screen">
+      {/* Contenedor Principal estilo Premium */}
+      <div className="rounded-[40px] border border-zinc-100 bg-white p-8 md:p-12 shadow-sm">
+        
+        {/* Encabezado con Marca y Plan */}
+        <div className="mb-8">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">
+            Detalles del Servicio
+          </span>
+          <h1 className="text-5xl font-black tracking-tighter text-zinc-900 mt-2">
+            {product.brand}
+          </h1>
+          <p className="text-zinc-400 font-medium italic mt-1 text-lg">
+            {product.plan} • {product.durationMonths} mes(es)
+          </p>
+        </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-zinc-200 p-4">
-            <div className="text-xs font-semibold text-zinc-500">Plan</div>
-            <div className="mt-1 font-semibold">{product.plan}</div>
+        {/* Grid de Información Rápida corregido */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-10">
+          <div className="rounded-3xl bg-zinc-50 p-6 border border-zinc-100">
+            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Precio</div>
+            <div className="mt-1 text-2xl font-black text-zinc-900">${product.priceMXN}</div>
           </div>
+          <div className="rounded-3xl bg-zinc-50 p-6 border border-zinc-100">
+            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Grupo</div>
+            <div className="mt-1 text-sm font-bold text-zinc-700">{product.group}</div>
+          </div>
+          <div className="rounded-3xl bg-zinc-50 p-6 border border-zinc-100">
+            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Categoría</div>
+            <div className="mt-1 text-sm font-bold text-zinc-700">{product.category}</div>
+          </div>
+          <div className="rounded-3xl bg-zinc-50 p-6 border border-zinc-100">
+            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Estado</div>
+            <div className="mt-1 text-sm font-bold text-emerald-600">{product.status}</div>
+          </div>
+        </div>
 
-          <div className="rounded-2xl border border-zinc-200 p-4">
-            <div className="text-xs font-semibold text-zinc-500">Grupo</div>
-            <div className="mt-1 font-semibold">{product.group}</div>
+        {/* SECCIÓN DE DESCRIPCIÓN (Aquí aparecen tus emojis y detalles) */}
+        <div className="space-y-4 border-t border-zinc-100 pt-8">
+          <h2 className="text-xl font-black text-zinc-900 flex items-center gap-2">
+            <span className="bg-zinc-900 text-white px-2 py-1 rounded-lg text-xs font-bold">INFO</span>
+            Instrucciones y Beneficios
+          </h2>
+          
+          <div className="rounded-[32px] bg-zinc-50 p-8 border border-zinc-50">
+            {product.description ? (
+              <p className="whitespace-pre-wrap text-zinc-600 leading-relaxed text-base font-medium">
+                {product.description}
+              </p>
+            ) : (
+              <p className="text-zinc-400 italic">No hay detalles adicionales registrados para este producto.</p>
+            )}
           </div>
+        </div>
 
-          <div className="rounded-2xl border border-zinc-200 p-4">
-            <div className="text-xs font-semibold text-zinc-500">Duración</div>
-            <div className="mt-1 font-semibold">{product.durationMonths} mes(es)</div>
-          </div>
-
-          <div className="rounded-2xl border border-zinc-200 p-4">
-            <div className="text-xs font-semibold text-zinc-500">Precio</div>
-            <div className="mt-1 text-lg font-black">${product.priceMXN} MXN</div>
-          </div>
+        {/* Botón de Compra Final */}
+        <div className="mt-12">
+          <a 
+            href={`https://wa.me/523344614845?text=Hola, me interesa el servicio de ${product.brand} (${product.plan})`}
+            className="block w-full text-center rounded-[24px] bg-emerald-500 py-6 font-bold text-white hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-500/20 text-xl"
+          >
+            Adquirir por WhatsApp ahora
+          </a>
         </div>
       </div>
     </main>

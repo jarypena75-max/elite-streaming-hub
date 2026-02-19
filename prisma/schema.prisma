@@ -29,6 +29,9 @@ model Product {
   category       String
   brand          String
   plan           String
+  // --- CAMBIO AQUÍ: Campo para los detalles y emojis ---
+  description    String?       @db.Text 
+  // ----------------------------------------------------
   durationMonths Int
   priceMXN       Int
   status         ProductStatus
@@ -43,12 +46,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-
   role          Role      @default(RESELLER)
-
-  // Para login Credentials (admin / revendedor)
   passwordHash  String?
-
   accounts      Account[]
   sessions      Session[]
 }
@@ -88,10 +87,11 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
 model SiteSetting {
-  id                 String   @id @default("main")
+  id                  String   @id @default("main")
   catalogHeroImageUrl String?
   catalogHeroTitle    String   @default("Catálogo")
   catalogHeroSubtitle String   @default("Elige, revisa disponibilidad y pide por WhatsApp.")
-  updatedAt          DateTime @updatedAt
+  updatedAt           DateTime @updatedAt
 }
