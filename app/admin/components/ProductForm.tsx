@@ -15,7 +15,6 @@ import {
 import { saveProduct } from "../actions";
 
 export function ProductForm({ initialData }: { initialData?: any }) {
-  // Inicializamos el formulario con los valores que ya tienes en tu base de datos
   const { register, handleSubmit, control } = useForm({
     defaultValues: initialData || {
       brand: "",
@@ -31,48 +30,45 @@ export function ProductForm({ initialData }: { initialData?: any }) {
 
   const onSubmit = async (data: any) => {
     try {
-      // Enviamos los datos al servidor incluyendo la descripción con emojis
       await saveProduct({ ...data, id: initialData?.id });
-      alert("✅ Producto guardado con éxito");
-      window.location.reload(); // Recargamos para ver los cambios
+      alert("✅ ¡Guardado con éxito!");
+      window.location.reload();
     } catch (error) {
       alert("❌ Error al guardar");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 md:p-8 rounded-[32px] border border-zinc-100 shadow-sm">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 md:p-8 rounded-[32px] border border-zinc-100 shadow-sm text-left">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-zinc-700 font-bold text-sm">Marca / Servicio</Label>
-          <Input {...register("brand")} placeholder="Ej: Netflix" className="rounded-xl border-zinc-200" />
+          <Label className="font-bold text-zinc-700">Marca</Label>
+          <Input {...register("brand")} placeholder="Netflix, HBO..." className="rounded-xl border-zinc-200" />
         </div>
-        
         <div className="space-y-2">
-          <Label className="text-zinc-700 font-bold text-sm">Precio (MXN)</Label>
+          <Label className="font-bold text-zinc-700">Precio (MXN)</Label>
           <Input type="number" {...register("priceMXN", { valueAsNumber: true })} className="rounded-xl border-zinc-200" />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label className="text-zinc-700 font-bold text-sm">Plan</Label>
-          <Input {...register("plan")} placeholder="Ej: Premium 4K" className="rounded-xl border-zinc-200" />
+          <Label className="font-bold text-zinc-700">Plan</Label>
+          <Input {...register("plan")} placeholder="Premium, 1 Pantalla..." className="rounded-xl border-zinc-200" />
         </div>
-
         <div className="space-y-2">
-          <Label className="text-zinc-700 font-bold text-sm">Estado</Label>
+          <Label className="font-bold text-zinc-700">Estado</Label>
           <Controller
             control={control}
             name="status"
             render={({ field }) => (
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="rounded-xl border-zinc-200">
-                  <SelectValue placeholder="Seleccionar estado" />
+                  <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DISPONIBLE">Disponible</SelectItem>
-                  <SelectItem value="AGOTADO">Agotado</SelectItem>
+                  <SelectItem value="DISPONIBLE">Disponible ✅</SelectItem>
+                  <SelectItem value="AGOTADO">Agotado ❌</SelectItem>
                 </SelectContent>
               </Select>
             )}
@@ -80,23 +76,17 @@ export function ProductForm({ initialData }: { initialData?: any }) {
         </div>
       </div>
 
-      {/* SECCIÓN DE DETALLES: Crucial para evitar el 404 y mostrar info */}
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <Label className="text-zinc-700 font-bold text-sm">Instrucciones y Beneficios (Emojis)</Label>
-        </div>
+        <Label className="font-bold text-zinc-700 text-sm">Instrucciones (Soporta Emojis)</Label>
         <Textarea 
           {...register("description")} 
           placeholder="✅ Pantalla original&#10;✅ Garantía total..."
-          className="min-h-[200px] rounded-2xl border-zinc-200 focus:border-emerald-500 focus:ring-emerald-500/10 transition-all resize-none p-4 text-sm leading-relaxed"
+          className="min-h-[180px] rounded-2xl border-zinc-200 focus:ring-emerald-500/10 resize-none p-4 text-sm"
         />
-        <p className="text-[10px] text-zinc-400 italic">
-          Esto es lo que verá el cliente al presionar "Ver todos los detalles".
-        </p>
       </div>
 
-      <Button type="submit" className="w-full bg-zinc-900 text-white rounded-2xl py-6 text-base font-bold hover:bg-black transition-all active:scale-[0.98]">
-        {initialData ? "Actualizar Producto" : "Crear Producto"}
+      <Button type="submit" className="w-full bg-zinc-900 text-white rounded-2xl py-6 font-bold hover:bg-black transition-all">
+        {initialData ? "Actualizar" : "Crear Producto"}
       </Button>
     </form>
   );
