@@ -6,7 +6,6 @@ function parseId(raw: string) {
   return /^\d+$/.test(raw) ? Number(raw) : raw;
 }
 
-// En Next.js 15+, params DEBE ser una Promise
 export default async function ProductDetail({ params }: { params: Promise<{ id: string }> }) {
   // 1. Resolvemos la promesa de params para evitar el error de compilación
   const resolvedParams = await params;
@@ -14,7 +13,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
 
   if (!rawId) return notFound();
 
-  const id = parseId(String(rawId)) as any;
+  const id = parseId(String(rawId));
 
   // 2. Buscamos el producto en la base de datos
   const product = await prisma.product.findUnique({
@@ -58,25 +57,6 @@ export default async function ProductDetail({ params }: { params: Promise<{ id: 
           <div className="rounded-2xl md:rounded-3xl bg-zinc-50 p-4 md:p-6 border border-zinc-100">
             <div className="text-[9px] md:text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Estado</div>
             <div className="mt-1 text-xs md:text-sm font-bold text-emerald-600 uppercase">{product.status}</div>
-          </div>
-        </div>
-
-        {/* SECCIÓN DE DESCRIPCIÓN (Emojis y saltos de línea garantizados) */}
-        <div className="space-y-4 border-t border-zinc-100 pt-8 text-left">
-          <h2 className="text-lg md:text-xl font-black text-zinc-900 flex items-center gap-2">
-            <span className="bg-zinc-900 text-white px-2 py-1 rounded-lg text-[10px] font-bold">INFO</span>
-            Instrucciones y Beneficios
-          </h2>
-          
-          <div className="rounded-[24px] md:rounded-[32px] bg-zinc-50 p-5 md:p-8 border border-zinc-50">
-            {/* whitespace-pre-wrap permite que los Enters del admin se vean aquí */}
-            {product.description ? (
-              <p className="whitespace-pre-wrap text-zinc-600 leading-relaxed text-sm md:text-base font-medium">
-                {product.description}
-              </p>
-            ) : (
-              <p className="text-zinc-400 italic text-sm">No hay detalles adicionales registrados.</p>
-            )}
           </div>
         </div>
 

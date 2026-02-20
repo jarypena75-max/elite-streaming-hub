@@ -29,9 +29,7 @@ model Product {
   category       String
   brand          String
   plan           String
-  // --- CAMBIO AQUÍ: Campo para los detalles y emojis ---
-  description    String?       @db.Text 
-  // ----------------------------------------------------
+  // description    String?       @db.Text  // Eliminado
   durationMonths Int
   priceMXN       Int
   status         ProductStatus
